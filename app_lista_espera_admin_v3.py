@@ -178,11 +178,16 @@ if "usuario" in st.session_state:
                                   usuario_atual, agora, vaga_concedida, profissional_responsavel, horario_atendimento, data_inicio]],
                                 columns=st.session_state.dados.columns)
             
-            if vaga_concedida == "Sim":
+                   novo = pd.DataFrame([[nome, carteirinha, data_contato, dias_espera, especialidade,
+                              telefone, turno, preferencia, usuario_atual, agora,
+                              vaga_concedida, profissional_responsavel, horario_atendimento, data_inicio]],
+                            columns=st.session_state.dados.columns)
+
+        if vaga_concedida == "Sim":
             st.session_state.atendidos = pd.concat([st.session_state.atendidos, novo], ignore_index=True)
             st.success("Paciente movido para atendidos.")
         else:
-            
+            st.session_state.dados = pd.concat([st.session_state.dados, novo], ignore_index=True)
             st.success("Paciente adicionado à lista de espera.")
 
     
