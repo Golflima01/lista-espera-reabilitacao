@@ -241,7 +241,7 @@ if "usuario" in st.session_state:
 
     # Exportar lista
     st.download_button("📥 Baixar Excel", data=st.session_state.dados.to_csv(index=False).encode("utf-8"),
-                       file_name=\'lista_espera_reabilitacao.csv\', mime=\'text/csv\')
+                       file_name='lista_espera_reabilitacao.xlsx', mime='text/xlsx')
 
     if perfil == "Administrador":
         st.subheader("🧾 Histórico de Registros")
