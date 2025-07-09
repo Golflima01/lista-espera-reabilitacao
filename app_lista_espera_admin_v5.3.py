@@ -77,8 +77,7 @@ DATA_FILE_ATENDIDOS = "data_atendidos.csv"
 
 def carregar_dados():
     if os.path.exists(DATA_FILE_ESPERA):
-        st.session_state.dados = pd.read_csv(DATA_FILE_ESPERA)
-        st.session_state.dados["Data 1º Contato"] = pd.to_datetime(st.session_state.dados["Data 1º Contato"])
+        st.session_state.dados["Data 1º Contato"] = pd.to_datetime(st.session_state.dados["Data 1º Contato"], errors='coerce')
     else:
         st.session_state.dados = pd.DataFrame(columns=["Vaga Concedida", "Profissional Responsável", "Horário Atendimento", "Data de Início", 
             "Nome", "Nº Carteirinha", "Data 1º Contato", "Dias de Espera",
@@ -92,7 +91,7 @@ def carregar_dados():
             "Preferência Profissional", "Profissional Indicado", "Registrado Por", "Data Registro"]:
             if col not in st.session_state.dados.columns:
                 st.session_state.dados[col] = None
-
+st.session_state.atendidos["Data 1º Contato"] = pd.to_datetime(st.session_state.atendidos["Data 1º Contato"], errors='coerce')
     if os.path.exists(DATA_FILE_ATENDIDOS):
         st.session_state.atendidos = pd.read_csv(DATA_FILE_ATENDIDOS)
         st.session_state.atendidos["Data 1º Contato"] = pd.to_datetime(st.session_state.atendidos["Data 1º Contato"])
