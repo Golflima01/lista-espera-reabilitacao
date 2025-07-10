@@ -226,7 +226,39 @@ if "usuario" in st.session_state:
 
     # Tabelas
     st.subheader("🕐 Pacientes em Espera")
-    st.dataframe(aplicar_estilo(st.session_state.dados))
+    st.subheader("🕐 Pacientes em Espera")
+
+for i, row in st.session_state.dados.iterrows():
+    with st.expander(f"{row['Nome']} - {row['Especialidade']}"):
+        col1, col2, col3 = st.columns(3)
+        col1.markdown(f"📅 Esperando desde: **{row['Data 1º Contato'].strftime('%d/%m/%Y')}**")
+        col2.markdown(f"📞 Telefone: **{row['Telefone']}**")
+        col3.markdown(f"🕐 Preferência: **{row['Horário Preferencial']}**")
+
+        if "editar_espera" in st.session_state.usuarios[usuario_atual]["permissoes"]:
+            with st.form(f"alocar_form_{i}"):
+                st.markdown("### 📌 Marcar Vaga Encontrada")
+                prof_resp = st.text_input("Profissional Responsável", key=f"prof_{i}")
+                horario_atend = st.text_input("Horário de Atendimento", key=f"horario_{i}")
+                data_inicio = st.date_input("Data de Início", key=f"data_inicio_{i}")
+                confirmar = st.form_submit_button("Confirmar Vaga")
+
+                if confirmar:
+                    agora = datetime.now().strftime("%d/%m/%Y %H:%M")
+                    row_data = row.copy()
+                    row_data["Profissional Responsável"] = prof_resp
+                    row_data["Horário Atendimento"] = horario_atend
+                    row_data["Data de Início"] = data_inicio
+                    row_data["Vaga Concedida"] = "Sim"
+                    row_data["Data Registro"] = agora
+                    row_data["Registrado Por"] = usuario_atual
+
+                    st.session_state.atendidos = pd.concat([st.session_state.atendidos, pd.DataFrame([row_data])], ignore_index=True)
+                    st.session_state.dados.drop(index=i, inplace=True)
+                    st.success(f"Paciente {row['Nome']} movido para atendidos.")
+                    salvar_dados()
+                    st.experimental_rerun()
+
 
     st.subheader("✅ Pacientes Atendidos")
     st.dataframe(st.session_state.atendidos)
